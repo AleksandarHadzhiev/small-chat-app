@@ -1,10 +1,10 @@
 # small-chat-app
-Beta version of a small chat application using FastAPI Python and React.js
+Beta version of a small chat application using FastAPI Python and Next.js
 
 ## Description
 
 The app has for a goal to serve as a beta version for the full-scale app for an application similar to Discord.
-The backend will be in FastAPI utilizing `websockets`. For the frontend React.js will be utilized for simple design.
+The backend will be in FastAPI utilizing `websockets`. For the frontend Next.js will be utilized for simple design.
 
 ## Backend
 
