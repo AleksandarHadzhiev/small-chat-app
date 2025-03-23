@@ -1,41 +1,54 @@
-from fastapi import FastAPI, WebSocket, Request
+import json
+from fastapi import FastAPI, WebSocket
 
+from fastapi.middleware.cors import CORSMiddleware
 # Registered users and their websockets
 users = {}
 
 app = FastAPI()
+origins = [
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods="*",
+    allow_headers="*"
+)
+
 
 @app.get("/")
 def root():
-    return {"message": "Hello, World!"}
+    return json.dumps(list(users.keys()))
 
 
-@app.websocket("/ws")
-async def sign_in(request: Request, websocket: WebSocket):
-    body = await request.json()
-    checked_data = _validate_incoming_data(body=body)
+@app.post("/{email}")
+async def sign_in(email: str):
+    checked_data = _validate_incoming_data(email)
     if type(checked_data) == dict:
         return checked_data
-    return _get_user(email=checked_data, ws=websocket)
+    return _get_user(email=checked_data)
 
 
-def _validate_incoming_data(body):
-    if "email" not in body:
+def _validate_incoming_data(email: str):
+    if email is None:
         return {"fail": "Incorrect data"}
-    elif str(body["email"]).isspace() or body["email"] == "":
+    elif str(email).isspace() or email == "":
         return {"fail": "Empty email"}
-    elif "@" not in body["email"]:
+    elif "@" not in email:
         return {"fail": "The email format is incorrect"}
-    return body["email"]
+    return email
 
 
-def _get_user(email, ws: WebSocket):
+def _get_user(email):
     if email in users:
         return users[email]
     else:
-        register_user(email=email, ws=ws)
+        return register_user(email=email)
 
 
-def register_user(email, ws: WebSocket):
-    users[email] = ws
-    return ws
+def register_user(email):
+    users[email] = ""
+    return email
