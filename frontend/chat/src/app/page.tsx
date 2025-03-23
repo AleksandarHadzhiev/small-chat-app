@@ -22,17 +22,17 @@ export default function Home() {
   }
 
   return (
-    <div className="flex justify-center items-centeralign-center w-full h-full">
-      <form onSubmit={(e) => { register(e) }} className="flex flex-col justify-center space-y-3 items-center w-86 h-86 bg-white text-black">
+    <div className="flex justify-center items-center w-full h-full">
+      <form onSubmit={(e) => { register(e) }} className="flex flex-col justify-center space-y-3 items-center w-86 h-86 bg-[#2a2a2a] text-black">
         <div className="flex flex-col">
-          <label className="text-gray-700">Email:</label>
+          <label className="text-white">Email:</label>
           <input
-            className="text-center border border-blue-500 placeholder-black"
+            className="text-center border-b border-white placeholder-white"
             type="email"
             placeholder="example@gmail.com"
             onChange={(e) => { setEmail(e.target.value) }} />
         </div>
-        <button className="bg-blue-500 w-24 ju hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Submit</button>
+        <button className="bg-gray-500 w-24 ju hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full">Submit</button>
       </form>
     </div>
   );
