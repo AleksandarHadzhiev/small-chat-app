@@ -37,20 +37,22 @@ export default function Home() {
     }
 
     return (
-        <div className="flex flex-col justify-center items-centeralign-center w-full h-full">
-            <form onSubmit={(e) => { register(e) }} className="flex flex-col justify-center space-y-3 items-center w-86 h-86 bg-white text-black">
-                <div className="flex flex-col">
-                    <label className="text-gray-700">Message:</label>
+        <div className="flex flex-col w-full h-full">
+            <div id="messages" className="w-full h-[94%] bg-black text-gray-200 overflow-auto">
+            </div>
+            <form onSubmit={(e) => { register(e) }} className="flex w-full bg-gray-900 text-white">
+                <div className="flex w-full h-full">
                     <input
-                        className="text-center border border-blue-500 placeholder-black"
+                        className="w-full h-full p-2"
                         type="text"
-                        placeholder="Hi..."
+                        placeholder="Type..."
                         onChange={(e) => { setMessage(e.target.value) }} />
                 </div>
-                <button className="bg-blue-500 w-24 ju hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Submit</button>
+                <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                </svg>
+                </button>
             </form>
-            <div id="messages" className="w-86 h-86 bg-red-900 text-white">
-            </div>
         </div>
     );
 }
