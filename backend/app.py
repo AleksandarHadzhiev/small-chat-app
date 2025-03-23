@@ -1,6 +1,5 @@
 import json
-from fastapi import FastAPI, WebSocket
-
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 # Registered users and their websockets
 users = {}
@@ -18,6 +17,26 @@ app.add_middleware(
     allow_headers="*"
 )
 
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections = users
+
+
+    async def connect(self, ws: WebSocket, email: str):
+        await ws.accept()
+        self.active_connections[email] = ws
+
+
+    async def disconnect(self, email: str):
+        self.active_connections.pop(email)
+
+
+    async def broadcast(self, message: str):
+        for email in self.active_connections:
+            ws: WebSocket = self.active_connections[email]
+            await ws.send_text(message)
+
+connection_manager = ConnectionManager()
 
 @app.get("/")
 def root():
@@ -52,3 +71,15 @@ def _get_user(email):
 def register_user(email):
     users[email] = ""
     return email
+
+
+@app.websocket("/ws/{email}")
+async def websocket_endpoint(websocket: WebSocket, email: str):
+    await connection_manager.connect(ws=websocket, email=email)
+    try:
+        while True:
+            data = await websocket.receive_text() 
+            await connection_manager.broadcast(f"Client #{email}: {data}")
+    except WebSocketDisconnect:
+        connection_manager.disconnect(email=email)
+        await connection_manager.broadcast(f"Client #{email} left the chat")
