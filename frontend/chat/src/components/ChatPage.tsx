@@ -34,13 +34,11 @@ export default function Chat({ groupName }) {
     function showMessage(message: string) {
         const data = JSON.parse(message)
         if (data.group === groupName) {
-            const messageContainer = document.getElementById("messages-" + groupName);
+            const messageContainer = document.getElementById("messages")?.lastElementChild;
+            console.log(document.getElementById("messages"))
             const messageElement = document.createElement('p');
-            if (messageContainer) {
-                messageElement.textContent = data.content
-                messageContainer?.append(messageElement)
-            }
-
+            messageElement.textContent = data.content
+            messageContainer?.append(messageElement)
         }
     }
 
