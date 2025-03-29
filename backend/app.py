@@ -16,13 +16,17 @@ class Group:
     async def send_message_to_members(self, content, email, connections):
         for member in self.members:
             ws: WebSocket = connections[member]
-            content = f"{email}: {content}"
+            print(content)
+            if "@gmail.com" not in content:
+                content = f"{email}: {content}"
             print(content)
             message = {
                 "content": content,
                 "group": self.name
             }
-            self.messages.append(content)
+            print(message)
+            if content not in self.messages:
+                self.messages.append(content)
             await ws.send_json(message)
 
     def update_name(self, name, owner):
@@ -66,7 +70,7 @@ class ConnectionManager:
         group_name = message["group"]
         if len(groups) > 0:
             for group in groups:
-                if group.name == group_name:
+                if group.name == group_name and email in group.members:
                     await group.send_message_to_members(content=content, email=email, connections=self.active_connections)
 
 
@@ -165,10 +169,12 @@ async def create_group(request: Request):
 async def join_group(request: Request):
     body = await request.json()
     group_name = body["name"]
-    user = body["email"]
+    email = body["email"]
+    if group_name == "" or email == "":
+        return {"fail": "Empty data"}
     for group in groups:
         if group.name == group_name:
-            group.group_join(email=user)
+            group.group_join(email=email)
 
 
 # LEAVE GROUP
@@ -177,6 +183,8 @@ async def leave_group(request: Request):
     body = await request.json()
     email = body["email"]
     group_name = body["name"]
+    if group_name == "" or email == "":
+        return {"fail": "Empty data"}
     for group in groups:
         if group.name == group_name:
             group.leave_group(email=email)
@@ -189,6 +197,8 @@ async def update_name(request: Request):
     owner = body["owner"]
     group_name = body["name"]
     new_name = body["newName"]
+    if group_name == "" or owner == "" or new_name == "":
+        return {"fail": "Empty data"}
     for group in groups:
         if group.name == group_name:
             group.update_name(name=new_name, owner=owner)
@@ -201,6 +211,8 @@ async def remove_member_from_group(request: Request):
     email = body["email"]
     owner = body["owner"]
     group_name = body["name"]
+    if group_name == "" or owner == "" or email == "":
+        return {"fail": "Empty data"}
     for group in groups:
         if group.name == group_name:
             group.remove_user(email=email, owner=owner)
@@ -212,14 +224,19 @@ async def delete_group(request: Request):
     body = await request.json()
     owner = body["owner"]
     group_name = body["name"]
+    if group_name == "" or owner == "":
+        return {"fail": "Empty data"}
     for group in groups:
         if group.name == group_name and group[0] == owner:
             groups.pop(group)
 
 
-@app.get("/{group_name}/messages")
-async def getMessages(group_name):
+@app.get("/{group_name}/messages/{email}")
+async def getMessages(group_name, email):
+    if group_name == "" or email == "":
+        return {"fail": "Empty data"}
     for group in groups:
         if group.name == group_name:
-            return {"messages": group.messages}
+            if email in group.members:
+                return {"messages": group.messages}
     return {"messages": []}
