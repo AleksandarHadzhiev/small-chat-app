@@ -1,16 +1,20 @@
 "use client"
 
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 export default function Home() {
   const [email, setEmail] = useState("")
+  const router = useRouter()
 
   function register(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    console.log(email)
     fetch("http://127.0.0.1:8000/" + email, { method: "POST" })
       .then(async (res) => {
         if (res.status == 200) {
           localStorage.setItem("user", email)
+          router.push('/chat')
         }
         else {
           alert("Unknown error")
