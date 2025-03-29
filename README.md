@@ -10,7 +10,10 @@ The backend will be in FastAPI utilizing `websockets`. For the frontend Next.js 
 
 The backend will have a very simple architecture: 
  - WebSockets: connection for the messaging functionality
- - REST API: creating users - simple email which is added to a dictionary where the email is a key for value of websocket.
+ - REST API:
+  - creating users - simple email which is added to a dictionary where the email is a key for value of websocket.
+  - creating groups - simple name which works also as an identifier of the grouo and list of members and messages.
+- When WS receieves/sends message, the message gets stored in the group.messages list.
 
 ## Frontend
 
