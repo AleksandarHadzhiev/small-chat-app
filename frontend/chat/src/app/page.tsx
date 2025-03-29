@@ -31,7 +31,7 @@ export default function Home() {
         <div className="flex flex-col">
           <label className="text-white">Email:</label>
           <input
-            className="text-center border-b border-white placeholder-white"
+            className="text-center border-b border-white placeholder-white text-white"
             type="email"
             placeholder="example@gmail.com"
             onChange={(e) => { setEmail(e.target.value) }} />

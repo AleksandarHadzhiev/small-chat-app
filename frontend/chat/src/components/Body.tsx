@@ -20,7 +20,7 @@ export default function Body({ groups, setIsToAddGroup }) {
     }
 
     function getMessages() {
-        fetch("http://127.0.0.1:8000/" + name + "/messages", { method: "GET" })
+        fetch("http://127.0.0.1:8000/" + name + "/messages/" + localStorage.getItem('user'), { method: "GET" })
             .then(async (res) => {
                 if (res.status == 200) {
                     const data = await res.json()

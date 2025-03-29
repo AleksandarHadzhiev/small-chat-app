@@ -34,11 +34,13 @@ export default function CreateGroup({ setGroupAdded, setIsToAddGroup }) {
 
     return (
         <div className="flex justify-center items-center w-full h-full">
-            <form onSubmit={(e) => { createGroup(e) }} className="flex flex-col justify-center space-y-3 items-center w-86 h-86 bg-[#2a2a2a] text-black">
+
+            <form onSubmit={(e) => { createGroup(e) }} className="flex flex-col justify-center space-y-3 items-center w-86 h-86 bg-[#2a2a2a] text-white">
+                <h1>Create Group</h1>
                 <div className="flex flex-col">
                     <label className="text-white">Name:</label>
                     <input
-                        className="text-center border-b border-white placeholder-white"
+                        className="text-center border-b border-white placeholder-white text-white"
                         type="text"
                         placeholder="name"
                         onChange={(e) => { setName(e.target.value) }} />
