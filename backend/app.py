@@ -16,17 +16,27 @@ class Group:
     async def send_message_to_members(self, content, email, connections):
         for member in self.members:
             ws: WebSocket = connections[member]
-            print(content)
-            if "@gmail.com" not in content:
-                content = f"{email}: {content}"
-            print(content)
-            message = {
-                "content": content,
-                "group": self.name
-            }
-            print(message)
-            if content not in self.messages:
-                self.messages.append(content)
+            type = content["type"]
+            title = type["title"]
+            tag = type["tag"]
+            text = ""
+            if title == "notification":
+                message = {
+                    "tag": tag,
+                    "email": email,
+                    "group": self.name
+                }
+            else:
+                text = content["message"]
+                if "@gmail.com" not in text:
+                    text = f"{email}: {text}"
+                message = {
+                    "tag": tag,
+                    "content": text,
+                    "group": self.name
+                }
+            if text not in self.messages and title=="message":
+                self.messages.append(text)
             await ws.send_json(message)
 
     def update_name(self, name, owner):
@@ -144,7 +154,6 @@ async def get_groups():
     _groups = []
     for group in groups:
         _groups.append(group.name)
-    print(_groups)
     return {"groups": _groups}
 
 
